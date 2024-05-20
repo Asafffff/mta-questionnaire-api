@@ -19,8 +19,7 @@ import json
 
 
 from datetime import datetime
-from bson import ObjectId
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 
 from src.openapi_server.models.pyobjectid import PyObjectId
@@ -37,7 +36,8 @@ class Answer(BaseModel):
     """  # noqa: E501
 
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    question_id: StrictStr
+    user_id: PyObjectId
+    question_id: PyObjectId
     text: Optional[Any]
     created_at: Optional[datetime] = Field(default_factory=datetime.utcnow)
     __properties: ClassVar[List[str]] = ["_id", "question_id", "answer", "created_at"]

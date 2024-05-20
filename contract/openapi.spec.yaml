@@ -95,6 +95,10 @@ components:
           format: objectid
           title: ID
           readOnly: true
+        user_id:
+          type: string
+          format: objectid
+          title: User ID
         question_id:
           type: string
           format: objectid
