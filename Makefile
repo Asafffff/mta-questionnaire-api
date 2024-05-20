@@ -10,29 +10,17 @@ APP = app.py
 
 help:
 	@echo "Usage:"
-	@echo "  make install     Install Python dependencies"
-	@echo "  make build       Build Docker images"
-	@echo "  make up          Start Docker containers"
-	@echo "  make down        Stop Docker containers"
-	@echo "  make clean       Remove Docker containers and volumes"
-	@echo "  make test        Run tests"
+	@echo "  make install          Install Python dependencies"
+	@echo "  make build            Build Docker images"
+	@echo "  make test             Run tests"
+	@echo "  make generate-api     Generate API from OpenAPI spec"
+	@echo "  make test             Run tests"
 
 install:
 	$(PIP) install -r requirements.txt
 
 build:
 	$(DOCKER_COMPOSE) up --build -d
-
-up:
-	$(DOCKER_COMPOSE) up -d
-
-down:
-	$(DOCKER_COMPOSE) down
-
-clean:
-	$(DOCKER_COMPOSE) down -v
-	$(DOCKER_COMPOSE) rm -f
-	$(DOCKER_COMPOSE) volume rm $(shell $(DOCKER_COMPOSE) volume ls -q)
 
 test:
 	$(PYTHON) -m unittest discover -s tests
@@ -45,7 +33,3 @@ generate-api:
 
 generate-models:
 	docker run --rm -u $(id -u ${USER}):$(id -g ${USER}) -v ${PWD}/contract:/local openapitools/openapi-generator-cli:v7.5.0 generate -i /local/openapi.spec.yaml -g python-fastapi -o /local/oas-generator-out/python && rm -rf ./src/openapi_server/models && mkdir ./src/openapi_server/models && mv contract/oas-generator-out/python/src/openapi_server/models ./src/openapi_server/models && rm -rf contract/oas-generator-out
-
-
-#generate-api:
-#	docker run --rm -u $(id -u ${USER}):$(id -g ${USER}) -v ${PWD}/contract:/local openapitools/openapi-generator-cli:7.5.0 generate -i /local/openapi.spec.yaml -g typescript-nestjs -o /local/oas-generator-out/typescript && rm -rf ./src/models/MODELDIR && mv contract/oas-generator-out/typescript/model ./src/models/MODELDIR && rm -rf contract/oas-generator-out
