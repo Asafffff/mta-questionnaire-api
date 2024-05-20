@@ -37,6 +37,25 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     importlib.import_module(name)
 
 
+@router.get(
+    "/questionnaires",
+    responses={
+        200: {"model": APIResponse, "description": "A list of questionnaires"},
+        500: {"description": "Internal server error"},
+    },
+    tags=["default"],
+    summary="Get all questionnaires",
+    response_model_by_alias=True,
+)
+async def questionnaires_get(
+    service: QuestionnaireService = Depends(QuestionnaireService),
+) -> APIResponse:
+    """Retrieve all questionnaires"""
+    result = await service.get_questionnaires()
+
+    return APIResponse(data=result)
+
+
 @router.post(
     "/questionnaire",
     responses={

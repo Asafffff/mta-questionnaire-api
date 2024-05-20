@@ -6,7 +6,26 @@ info:
 servers:
   - url: /api/v1
 paths:
-  /questionnaire:
+  /questionnaires:
+    get:
+      summary: Get all questionnaires
+      description: Retrieve all questionnaires
+      responses:
+        "200":
+          description: A list of questionnaires
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/APIResponse"
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Questionnaire"
+        "500":
+          description: Internal server error
     post:
       requestBody:
         content:

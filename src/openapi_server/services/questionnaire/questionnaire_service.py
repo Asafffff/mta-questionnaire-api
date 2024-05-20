@@ -1,5 +1,6 @@
 from fastapi import Depends
 from typing import List
+from src.openapi_server.models.questionnaire import Questionnaire
 from src.openapi_server.models.answer import Answer
 from src.openapi_server.models.question import Question
 from src.openapi_server.models.questionnaire_submission import QuestionnaireSubmission
@@ -37,10 +38,20 @@ class QuestionnaireService:
 
         return
 
+    async def get_questionnaires(self) -> List[Questionnaire]:
+        logger.info("Getting all questionnaires")
+        cursor = self.db["questionnaires"].find()
+        result = await cursor.to_list(length=20)
+        logger.info(f"Found {len(result)} questionnaires")
+
+        serialized_result = [Questionnaire(**doc) for doc in result]
+
+        return serialized_result
+
     async def get_questions(self, questionnaire_id: str) -> List[Question]:
         logger.info("Getting questions by given questionareId")
         cursor = self.db["questions"].find({"questionnaire_id": questionnaire_id})
-        result = await cursor.to_list(length=200)
+        result = await cursor.to_list(length=50)
         logger.info(f"Found {len(result)} questions")
 
         serialized_result = [Question(**doc) for doc in result]
