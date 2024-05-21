@@ -4,7 +4,7 @@ from typing import Annotated, Any, Dict, List  # noqa: F401
 import importlib
 import pkgutil
 
-from src.openapi_server.middlewares.auth_middleware import VerifyToken
+from src.openapi_server.middlewares.auth_middleware import JWTVerifyingStrategy
 from src.openapi_server.models.api_response import APIResponse
 import src.openapi_server.services
 
@@ -32,7 +32,7 @@ from src.openapi_server.models.questionnaire_submission import QuestionnaireSubm
 
 
 router = APIRouter()
-auth = VerifyToken()
+authStrategy = JWTVerifyingStrategy()
 
 ns_pkg = src.openapi_server.services
 for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
@@ -41,6 +41,7 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
 
 @router.get(
     "/questionnaires",
+    dependencies=[Depends(authStrategy.verify)],
     responses={
         200: {"model": APIResponse, "description": "A list of questionnaires"},
         500: {"description": "Internal server error"},
@@ -50,7 +51,6 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     response_model_by_alias=True,
 )
 async def questionnaires_get(
-    auth_result: str = Security(auth.verify),
     service: QuestionnaireService = Depends(QuestionnaireService),
 ) -> APIResponse:
     """Retrieve all questionnaires"""
@@ -61,6 +61,7 @@ async def questionnaires_get(
 
 @router.post(
     "/questionnaires",
+    dependencies=[Depends(authStrategy.verify)],
     responses={
         200: {
             "model": APIResponse,
@@ -76,7 +77,7 @@ async def questionnaires_get(
 )
 async def questionnaire_post(
     questionnaire_submission: QuestionnaireSubmission = Body(None, description=""),
-    auth_result: str = Security(auth.verify),
+    auth_result: dict = Security(authStrategy.verify),
     service: QuestionnaireService = Depends(QuestionnaireService),
 ) -> APIResponse:
     await service.submit_answers(questionnaire_submission, user_id=auth_result["sub"])
@@ -85,6 +86,7 @@ async def questionnaire_post(
 
 @router.get(
     "/questions",
+    dependencies=[Depends(authStrategy.verify)],
     responses={
         200: {"model": APIResponse, "description": "A list of questions"},
         400: {"description": "Invalid parameter"},
@@ -95,7 +97,6 @@ async def questionnaire_post(
     response_model_by_alias=True,
 )
 async def questions_get(
-    auth_result: str = Security(auth.verify),
     questionnaire_id: str = Query(
         None,
         description="ID of the questionnaire to filter questions",

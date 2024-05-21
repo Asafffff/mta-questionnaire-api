@@ -1,18 +1,14 @@
-from typing import Annotated, Optional
-from fastapi import Depends, FastAPI, Request, HTTPException
-from fastapi.security import OAuth2PasswordBearer
-from starlette.responses import Response
-import jwt
+from typing import Optional
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi import Depends, HTTPException, status
 from fastapi.security import SecurityScopes, HTTPAuthorizationCredentials, HTTPBearer
+import jwt
 from src.openapi_server.core.settings import settings
 
 app = FastAPI()
 
 
-class VerifyToken:
-    """Does all the token verification using PyJWT"""
-
+class JWTVerifyingStrategy:
     def __init__(self):
         self.config = settings
 
