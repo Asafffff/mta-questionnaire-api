@@ -38,7 +38,7 @@ class AnswerDB(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     question_id: PyObjectId
     text: Optional[Any]
-    created_at: Optional[datetime] = None
+    created_at: Optional[datetime] = Field(default_factory=datetime.utcnow)
     user_id: StrictStr
     __properties: ClassVar[List[str]] = [
         "id",
