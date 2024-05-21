@@ -9,9 +9,6 @@ from src.openapi_server.core.settings import settings
 
 app = FastAPI()
 
-SECRET_KEY = "t9FGxWZCb6rmXGIGpUYUUYxMkGdGRc0j"
-ALGORITHM = "HS256"
-
 
 class VerifyToken:
     """Does all the token verification using PyJWT"""

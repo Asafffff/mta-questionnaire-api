@@ -60,7 +60,7 @@ async def questionnaires_get(
 
 
 @router.post(
-    "/questionnaire",
+    "/questionnaires",
     responses={
         200: {
             "model": APIResponse,
@@ -75,11 +75,11 @@ async def questionnaires_get(
     response_model_by_alias=True,
 )
 async def questionnaire_post(
-    auth_result: str = Security(auth.verify),
     questionnaire_submission: QuestionnaireSubmission = Body(None, description=""),
+    auth_result: str = Security(auth.verify),
     service: QuestionnaireService = Depends(QuestionnaireService),
 ) -> APIResponse:
-    await service.submit_answers(questionnaire_submission, user_id=auth_result.sub)
+    await service.submit_answers(questionnaire_submission, user_id=auth_result["sub"])
     return APIResponse(data="Questionnaire submitted successfully")
 
 

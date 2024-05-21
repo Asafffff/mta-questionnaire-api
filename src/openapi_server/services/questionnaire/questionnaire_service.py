@@ -1,5 +1,6 @@
 from fastapi import Depends
 from typing import List
+from src.openapi_server.models.answer_db import AnswerDB
 from src.openapi_server.models.questionnaire import Questionnaire
 from src.openapi_server.models.answer import Answer
 from src.openapi_server.models.question import Question
@@ -26,10 +27,10 @@ class QuestionnaireService:
         answersArray = []
         for answer in questionnaire_submission.answers:
             answersArray.append(
-                Answer(
+                AnswerDB(
                     user_id=user_id,
                     question_id=answer.question_id,
-                    answer=answer.text,
+                    text=answer.text,
                 ).model_dump(by_alias=True)
             )
 

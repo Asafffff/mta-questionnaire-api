@@ -95,15 +95,11 @@ components:
           format: objectid
           title: ID
           readOnly: true
-        user_id:
-          type: string
-          format: objectid
-          title: User ID
         question_id:
           type: string
           format: objectid
           title: Question ID
-        answer:
+        text:
           title: Answer
         created_at:
           type: string
@@ -112,7 +108,17 @@ components:
           readOnly: true
       required:
         - question_id
-        - answer
+        - text
+    AnswerDB:
+      allOf:
+        - $ref: "#/components/schemas/Answer"
+        - type: object
+          properties:
+            user_id:
+              type: string
+              title: User ID
+      required:
+        - user_id
     Question:
       type: object
       properties:

@@ -36,7 +36,6 @@ class Answer(BaseModel):
     """  # noqa: E501
 
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    user_id: PyObjectId
     question_id: PyObjectId
     text: Optional[Any]
     created_at: Optional[datetime] = Field(default_factory=datetime.utcnow)
