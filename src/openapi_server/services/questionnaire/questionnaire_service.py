@@ -15,9 +15,10 @@ class QuestionnaireService:
     def __init__(self, db: AsyncIOMotorDatabase = Depends(get_database)):
         self.db = db
 
-    async def submit(
+    async def submit_answers(
         self,
         questionnaire_submission: QuestionnaireSubmission,
+        user_id: str,
     ) -> None:
         logger.info("Received questionnaire submission")
         logger.debug(questionnaire_submission)
@@ -26,10 +27,10 @@ class QuestionnaireService:
         for answer in questionnaire_submission.answers:
             answersArray.append(
                 Answer(
-                    user_id="TEST",
+                    user_id=user_id,
                     question_id=answer.question_id,
                     answer=answer.text,
-                ).model_dump()
+                ).model_dump(by_alias=True)
             )
 
         result = await self.db["answers"].insert_many(answersArray)

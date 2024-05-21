@@ -1,10 +1,24 @@
 from typing import Any
-
 from bson import ObjectId
 from pydantic_core import core_schema
 
 
-class PyObjectId(str):
+class PyObjectId(ObjectId):
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+
+    @classmethod
+    def validate(cls, value, validation_info=None):
+        if not (
+            value
+            and (isinstance(value, ObjectId) or isinstance(value, str))
+            and ObjectId().is_valid(value)
+        ):
+            raise ValueError("Not a valid ObjectId")
+
+        return value
+
     @classmethod
     def __get_pydantic_core_schema__(
         cls, _source_type: Any, _handler: Any
@@ -26,10 +40,3 @@ class PyObjectId(str):
                 lambda x: str(x)
             ),
         )
-
-    @classmethod
-    def validate(cls, value) -> ObjectId:
-        if not ObjectId.is_valid(value):
-            raise ValueError("Invalid ObjectId")
-
-        return ObjectId(value)

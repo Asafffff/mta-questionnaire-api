@@ -8,5 +8,10 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     DATABASE_NAME: str
 
+    AUTH_DOMAIN: str
+    AUTH_API_AUDIENCE: str
+    AUTH_ISSUER: str
+    AUTH_ALGORITHMS: str
+
 
 settings = Settings()
