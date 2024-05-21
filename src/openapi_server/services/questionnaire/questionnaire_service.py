@@ -42,15 +42,14 @@ class QuestionnaireService:
         logger.info("Received questionnaire submission")
         logger.debug(questionnaire_submission)
 
-        answersArray = []
-        for answer in questionnaire_submission.answers:
-            answersArray.append(
-                AnswerDB(
-                    user_id=user_id,
-                    question_id=answer.question_id,
-                    text=answer.text,
-                ).model_dump(by_alias=True)
-            )
+        answersArray = [
+            AnswerDB(
+                user_id=user_id,
+                question_id=answer.question_id,
+                text=answer.text,
+            ).model_dump(by_alias=True)
+            for answer in questionnaire_submission.answers
+        ]
 
         await self.answerRepository.insert_many(answersArray)
 
