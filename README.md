@@ -17,6 +17,12 @@ Create a `.env` file in the root directory of the project with the following pro
 ```.env
 DATABASE_URL=<MONGODB_DB_URL>
 DATABASE_NAME=<MONGODB_DB_NAME>
+
+AUTH_DOMAIN=<STRING>
+AUTH_API_AUDIENCE=<STRING>
+AUTH_ISSUER=<STRING>
+AUTH_ALGORITHMS=RS256
+
 ```
 
 ## Installation
