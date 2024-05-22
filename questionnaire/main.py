@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 import logging
 
-from src.openapi_server.apis.questionnaire_controller import router as DefaultApiRouter
+from .router import main_router as DefaultApiRouter
 
 logging.basicConfig(level=logging.DEBUG)
 

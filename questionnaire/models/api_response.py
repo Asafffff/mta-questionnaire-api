@@ -18,11 +18,8 @@ import re  # noqa: F401
 import json
 
 
-from datetime import datetime
-from pydantic import BaseModel, Field, StrictStr
+from pydantic import BaseModel
 from typing import Any, ClassVar, Dict, List, Optional
-
-from src.openapi_server.models.pyobjectid import PyObjectId
 
 try:
     from typing import Self
@@ -30,20 +27,16 @@ except ImportError:
     from typing_extensions import Self
 
 
-class Answer(BaseModel):
+class APIResponse(BaseModel):
     """
-    Answer
+    APIResponse
     """  # noqa: E501
 
-    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    question_id: PyObjectId
-    text: Optional[Any]
-    created_at: Optional[datetime] = Field(default_factory=datetime.utcnow)
-    __properties: ClassVar[List[str]] = ["_id", "question_id", "answer", "created_at"]
+    data: Optional[Any]
+    __properties: ClassVar[List[str]] = ["data"]
 
     model_config = {
         "populate_by_name": True,
-        "arbitrary_types_allowed": True,
         "validate_assignment": True,
         "protected_namespaces": (),
     }
@@ -54,11 +47,12 @@ class Answer(BaseModel):
 
     def to_json(self) -> str:
         """Returns the JSON representation of the model using alias"""
+        # TODO: pydantic v2: use .model_dump_json(by_alias=True, exclude_unset=True) instead
         return json.dumps(self.to_dict())
 
     @classmethod
-    def from_json(cls, json_str: str) -> "Answer":
-        """Create an instance of Answer from a JSON string"""
+    def from_json(cls, json_str: str) -> Self:
+        """Create an instance of APIResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -70,36 +64,27 @@ class Answer(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
-        * OpenAPI `readOnly` fields are excluded.
         """
         _dict = self.model_dump(
             by_alias=True,
-            exclude={
-                "_id",
-                "created_at",
-            },
+            exclude={},
             exclude_none=True,
         )
-        if self.answer is None and "answer" in self.model_fields_set:
-            _dict["answer"] = None
+        # set to None if data (nullable) is None
+        # and model_fields_set contains the field
+        if self.data is None and "data" in self.model_fields_set:
+            _dict["data"] = None
 
         return _dict
 
     @classmethod
-    def from_dict(cls, obj: Dict) -> "Answer":
-        """Create an instance of Answer from a dict"""
+    def from_dict(cls, obj: Dict) -> Self:
+        """Create an instance of APIResponse from a dict"""
         if obj is None:
             return None
 
         if not isinstance(obj, dict):
             return cls.model_validate(obj)
 
-        _obj = cls.model_validate(
-            {
-                "_id": obj.get("_id"),
-                "question_id": obj.get("question_id"),
-                "answer": obj.get("answer"),
-                "created_at": obj.get("created_at"),
-            }
-        )
+        _obj = cls.model_validate({"data": obj.get("data")})
         return _obj

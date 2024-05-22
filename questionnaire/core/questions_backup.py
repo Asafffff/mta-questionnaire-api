@@ -1,4 +1,4 @@
-from openapi_server.models.question import Question
+from questionnaire.models import Question
 
 
 sleepQuestionnaireQuestions = [

@@ -1,8 +1,7 @@
 from fastapi import Depends
-from src.openapi_server.models.answer_db import AnswerDB
-from src.openapi_server.repositories.base_repository import BaseRepository
-from src.openapi_server.repositories.mongo_repository import get_database
 from motor.motor_asyncio import AsyncIOMotorDatabase
+from questionnaire.repositories.mongo_repository import get_database
+from questionnaire.repositories import BaseRepository
 
 
 class QuestionsRepository(BaseRepository):

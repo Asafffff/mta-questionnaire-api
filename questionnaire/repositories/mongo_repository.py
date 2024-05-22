@@ -1,5 +1,5 @@
 from motor.motor_asyncio import AsyncIOMotorClient
-from src.openapi_server.core.settings import settings
+from questionnaire.core import settings
 
 
 class MongoDBClient:

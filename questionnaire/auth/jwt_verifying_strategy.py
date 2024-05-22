@@ -1,9 +1,8 @@
-from typing import Optional
-from fastapi import Depends, FastAPI, HTTPException
-from fastapi import Depends, HTTPException, status
-from fastapi.security import SecurityScopes, HTTPAuthorizationCredentials, HTTPBearer
 import jwt
-from src.openapi_server.core.settings import settings
+from typing import Optional
+from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.security import SecurityScopes, HTTPAuthorizationCredentials, HTTPBearer
+from questionnaire.core import settings
 
 app = FastAPI()
 

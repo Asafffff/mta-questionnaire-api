@@ -26,7 +26,7 @@ test:
 	$(PYTHON) -m unittest discover -s tests
 
 run:
-	uvicorn src.openapi_server.main:app --reload
+	uvicorn questionnaire.main:app --reload
 
 generate-api:
 	docker run --rm -u $(id -u ${USER}):$(id -g ${USER}) -v ${PWD}/contract:/local openapitools/openapi-generator-cli:v7.5.0 generate -i /local/openapi.spec.yaml -g python-fastapi -o /local/oas-generator-out/python

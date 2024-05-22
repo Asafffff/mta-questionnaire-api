@@ -19,11 +19,10 @@ import json
 
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 
-from src.openapi_server.models.pyobjectid import PyObjectId
-
+from questionnaire.models.pyobjectid import PyObjectId
 
 try:
     from typing import Self
@@ -31,16 +30,16 @@ except ImportError:
     from typing_extensions import Self
 
 
-class Question(BaseModel):
+class Questionnaire(BaseModel):
     """
-    Question
+    Questionnaire
     """  # noqa: E501
 
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    questionnaire_id: StrictStr
-    text: Optional[Any]
+    name: StrictStr
+    description: Optional[StrictStr] = None
     created_at: Optional[datetime] = Field(default_factory=datetime.utcnow)
-    __properties: ClassVar[List[str]] = ["id", "questionnaire_id", "text", "created_at"]
+    __properties: ClassVar[List[str]] = ["id", "name", "description", "created_at"]
 
     model_config = {
         "populate_by_name": True,
@@ -60,7 +59,7 @@ class Question(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Self:
-        """Create an instance of Question from a JSON string"""
+        """Create an instance of Questionnaire from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,24 +72,21 @@ class Question(BaseModel):
           were set at model initialization. Other fields with value `None`
           are ignored.
         * OpenAPI `readOnly` fields are excluded.
+        * OpenAPI `readOnly` fields are excluded.
         """
         _dict = self.model_dump(
             by_alias=True,
             exclude={
                 "id",
+                "created_at",
             },
             exclude_none=True,
         )
-        # set to None if text (nullable) is None
-        # and model_fields_set contains the field
-        if self.text is None and "text" in self.model_fields_set:
-            _dict["text"] = None
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Dict) -> Self:
-        """Create an instance of Question from a dict"""
+        """Create an instance of Questionnaire from a dict"""
         if obj is None:
             return None
 
@@ -100,8 +96,8 @@ class Question(BaseModel):
         _obj = cls.model_validate(
             {
                 "id": obj.get("id"),
-                "questionnaire_id": obj.get("questionnaire_id"),
-                "text": obj.get("text"),
+                "name": obj.get("name"),
+                "description": obj.get("description"),
                 "created_at": obj.get("created_at"),
             }
         )
