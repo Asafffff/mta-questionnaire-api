@@ -1,30 +1,16 @@
-FROM python:3.7 AS builder
+FROM python:3.9-slim
 
-WORKDIR /usr/src/app
+ENV PYTHONDONTWRITEBYTECODE=1 \
+  PYTHONUNBUFFERED=1
 
-RUN python3 -m venv /venv
-ENV PATH="/venv/bin:$PATH"
+WORKDIR /app
 
-RUN pip install --upgrade pip
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
-RUN pip install --no-cache-dir .
 
+EXPOSE 8000
 
-FROM python:3.7 AS test_runner
-WORKDIR /tmp
-COPY --from=builder /venv /venv
-COPY --from=builder /usr/src/app/tests tests
-ENV PATH=/venv/bin:$PATH
-
-# install test dependencies
-RUN pip install pytest
-
-# run tests
-RUN pytest tests
-
-
-FROM python:3.7 AS service
-WORKDIR /root/app/site-packages
-COPY --from=test_runner /venv /venv
-ENV PATH=/venv/bin:$PATH
+CMD ["uvicorn", "questionnaire.main:app", "--host", "0.0.0.0", "--port", "8000"]
