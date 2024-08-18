@@ -2,12 +2,12 @@
   "version": "0.2.0",
   "configurations": [
       {
-          "name": "Uvicorn: openapi_server.main",
+          "name": "Uvicorn: questionnaire.main",
           "type": "debugpy",
           "request": "launch",
           "module": "uvicorn",
           "args": [
-              "src.openapi_server.main:app",
+              "questionnaire.main:app",
               "--reload"
           ],
           "justMyCode": false

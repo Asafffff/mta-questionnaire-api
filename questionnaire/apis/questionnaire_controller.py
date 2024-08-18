@@ -13,7 +13,7 @@ router = APIRouter()
 
 @router.get(
     "/",
-    dependencies=[Depends(authStrategy.verify)],
+    dependencies=[Depends(authStrategy)],
     responses={
         200: {"model": APIResponse, "description": "A list of questionnaires"},
         500: {"description": "Internal server error"},
@@ -34,7 +34,7 @@ async def questionnaires_get(
 
 @router.post(
     "/",
-    dependencies=[Depends(authStrategy.verify)],
+    dependencies=[Depends(authStrategy)],
     responses={
         200: {
             "model": APIResponse,
@@ -50,7 +50,7 @@ async def questionnaires_get(
 )
 async def questionnaire_post(
     questionnaire_submission: QuestionnaireSubmission = Body(None, description=""),
-    auth_result: dict = Security(authStrategy.verify),
+    auth_result: dict = Security(authStrategy),
     service: QuestionnairesService = Depends(QuestionnairesService),
 ) -> APIResponse:
     """Submit a questionnaire"""

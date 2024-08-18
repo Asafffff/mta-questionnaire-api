@@ -12,7 +12,7 @@ router = APIRouter()
 
 @router.get(
     "/",
-    dependencies=[Depends(authStrategy.verify)],
+    dependencies=[Depends(authStrategy)],
     responses={
         200: {"model": APIResponse, "description": "A list of questions"},
         400: {"description": "Invalid parameter"},

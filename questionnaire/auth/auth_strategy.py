@@ -1,4 +1,4 @@
-from questionnaire.auth.jwt_verifying_strategy import JWTVerifyingStrategy
+from questionnaire.auth.jwt_verifying_strategy import firebase_verify_token
 
 
-authStrategy = JWTVerifyingStrategy()
+authStrategy = firebase_verify_token
