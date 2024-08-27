@@ -55,6 +55,6 @@ async def questionnaire_post(
 ) -> APIResponse:
     """Submit a questionnaire"""
 
-    await service.submit_answers(questionnaire_submission, user_id=auth_result["sub"])
+    await service.submit_answers(questionnaire_submission, user_id=auth_result["email"])
 
     return APIResponse(data="Questionnaire submitted successfully")
